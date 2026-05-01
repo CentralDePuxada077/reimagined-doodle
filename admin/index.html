@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nz Store — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --surface2: #181818;
+      --border: #1e1e1e;
+      --red: #c0392b;
+      --red-dark: #96281b;
+      --red-glow: rgba(192, 57, 43, 0.15);
+      --text: #f0f0f0;
+      --muted: #666;
+      --white: #fff;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .logo-fallback {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: -1px;
+      user-select: none;
+    }
+
+    .logo-fallback span:first-child { color: #d0d0d0; }
+    .logo-fallback span:last-child  { color: var(--red); }
+
+    .header-titles h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .header-titles p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── LOGIN ── */
+    #login-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 64px);
+    }
+
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .login-card h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--white);
+      text-align: center;
+    }
+
+    .login-card p.sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: -0.75rem;
+    }
+
+    .login-error {
+      background: rgba(192, 57, 43, 0.12);
+      border: 1px solid rgba(192, 57, 43, 0.35);
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.82rem;
+      color: #e57373;
+      display: none;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="password"],
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.6rem 0.85rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--red);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background 0.18s, opacity 0.18s;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .btn-primary:hover { background: var(--red-dark); }
+
+    .btn-danger {
+      background: var(--red-dark);
+      color: var(--white);
+    }
+
+    .btn-danger:hover { background: #7b1f14; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .btn-full { width: 100%; }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── MAIN SECTION ── */
+    #main-section { display: none; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.75rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.65rem 1.1rem;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      margin-bottom: -1px;
+      transition: color 0.18s, border-color 0.18s;
+    }
+
+    .tab-btn.active {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
+    .tab-btn:hover:not(.active) { color: var(--text); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 1.1rem;
+    }
+
+    /* ── ADD USER FORM ── */
+    .add-user-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .field { display: flex; flex-direction: column; }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.65rem 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+
+    tbody td {
+      padding: 0.75rem 0.9rem;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    /* ── AVATAR ── */
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .avatar-placeholder {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      vertical-align: middle;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-active {
+      background: var(--red-glow);
+      color: #e57373;
+      border: 1px solid rgba(192, 57, 43, 0.3);
+    }
+
+    .badge-inactive {
+      background: #1a1a1a;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ── ACTIONS ── */
+    .actions {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .actions .btn {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.78rem;
+    }
+
+    /* ── LOGS TABLE ── */
+    .log-success { color: #4caf50; font-size: 1rem; }
+    .log-fail    { color: #e57373; font-size: 1rem; }
+
+    .log-msg {
+      max-width: 320px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    /* ── EMPTY / LOADING ── */
+    .empty-row td {
+      text-align: center;
+      color: var(--muted);
+      padding: 2rem;
+      font-size: 0.85rem;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 9999;
+      max-width: 320px;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #toast.toast-ok   { border-left: 3px solid #4caf50; }
+    #toast.toast-err  { border-left: 3px solid var(--red); }
+    #toast.toast-info { border-left: 3px solid #2196f3; }
+
+    /* ── INTEGRAÇÃO ── */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .file-download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1.1rem;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+      text-decoration: none;
+    }
+    .file-download-btn:hover {
+      border-color: var(--red);
+      background: #1a1010;
+    }
+    .file-download-btn .fname {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--white);
+      font-family: 'Consolas', monospace;
+    }
+    .file-download-btn .fmeta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .file-download-btn .dl-icon {
+      color: var(--red);
+      font-size: 1.1rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      header { padding: 0 1rem; }
+      .container { padding: 1.25rem 1rem; }
+      .add-user-grid { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+      #tab-integrar > .card:first-child > div:first-of-type { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <img
+      class="logo-img"
+      src="Logo.png"
+      alt="Nz Store Logo"
+      onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+    />
+    <div class="logo-fallback" id="logo-fallback" style="display:none;">
+      <span>N</span><span>Z</span>
+    </div>
+    <div class="header-titles">
+      <h1>Nz Store</h1>
+      <p>Admin Panel</p>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN SECTION -->
+<div id="login-section">
+  <div class="login-card">
+    <h2>Acesso Admin</h2>
+    <p class="sub">Digite a senha para continuar</p>
+    <div id="login-error" class="login-error">Senha incorreta.</div>
+    <div class="field">
+      <label for="password-input">Senha</label>
+      <input
+        type="password"
+        id="password-input"
+        placeholder="••••••••"
+        autocomplete="current-password"
+      />
+    </div>
+    <button class="btn btn-primary btn-full" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- MAIN SECTION -->
+<div id="main-section">
+  <div class="container">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('users')">Usuários</button>
+      <button class="tab-btn" onclick="switchTab('logs')">Logs</button>
+      <button class="tab-btn" onclick="switchTab('integrar')">⚙ Integração</button>
+    </div>
+
+    <!-- TAB: USERS -->
+    <div id="tab-users" class="tab-panel active">
+
+      <!-- ADD USER CARD -->
+      <div class="card">
+        <div class="card-title">Adicionar / Atualizar Usuário</div>
+        <div class="add-user-grid">
+          <div class="field">
+            <label for="new-discord">Discord ID</label>
+            <input type="text" id="new-discord" placeholder="123456789012345678" />
+          </div>
+          <div class="field">
+            <label for="new-username">Username <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+            <input type="text" id="new-username" placeholder="Auto via Discord Bot" />
+          </div>
+          <div class="field">
+            <label for="new-expires">Validade <span style="color:var(--muted);font-weight:400">(vazio = vitalício)</span></label>
+            <input type="text" id="new-expires" placeholder="AAAA-MM-DD" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" onclick="addUser()">+ Adicionar</button>
+          </div>
+        </div>
+        <div id="add-error" style="margin-top:0.75rem; font-size:0.82rem; color:#e57373; display:none;"></div>
+      </div>
+
+      <!-- USERS TABLE CARD -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;">
+          <div class="card-title" style="margin:0">Usuários Cadastrados</div>
+          <button class="btn btn-outline" style="font-size:0.8rem;padding:0.35rem 0.8rem" onclick="loadUsers()">↻ Atualizar</button>
+        </div>
+        <div class="table-wrap">
+          <table id="users-table">
+            <thead>
+              <tr>
+                <th style="width:44px"></th>
+                <th>Username</th>
+                <th>Discord ID</th>
+                <th>Validade</th>
+                <th>HWID</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr class="empty-row"><td colspan="7">Carregando usuários…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-users -->
+
+    <!-- TAB: LOGS -->
+    <div id="tab-logs" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Logs de Autenticação</div>
+        <div class="table-wrap">
+          <table id="logs-table">
+            <thead>
+              <tr>
+                <th>Discord ID</th>
+                <th>Resultado</th>
+                <th>Mensagem</th>
+                <th>IP</th>
+                <th>Data/Hora</th>
+              </tr>
+            </thead>
+            <tbody id="logs-tbody">
+              <tr class="empty-row"><td colspan="5">Carregando logs…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div><!-- /tab-logs -->
+
+    <!-- TAB: INTEGRAÇÃO -->
+    <div id="tab-integrar" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Gerador de Integração</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6">
+          Cole o seu arquivo original abaixo. O sistema injeta o código de autenticação Nz Store automaticamente e disponibiliza os arquivos prontos para download.
+        </p>
+
+        <!-- Configurações -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+          <div class="field">
+            <label>Linguagem</label>
+            <select id="int-lang" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:0.6rem 0.85rem;color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;cursor:pointer">
+              <option value="csharp">C# — Form1.cs</option>
+              <option value="cpp">C++ — main.cpp</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>URL da sua API <span style="color:var(--muted);font-weight:400">(Vercel ou servidor)</span></label>
+            <input type="text" id="int-url" placeholder="https://seu-projeto.vercel.app" />
+          </div>
+        </div>
+
+        <!-- Área de código -->
+        <div class="field" style="margin-bottom:1.25rem">
+          <label id="int-file-label">Cole o conteúdo do Form1.cs aqui</label>
+          <textarea id="int-code"
+            placeholder="Cole aqui o conteúdo completo do seu arquivo..."
+            style="width:100%;height:280px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:0.85rem;color:var(--text);font-family:'Consolas','Courier New',monospace;font-size:0.82rem;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.2s"
+            onfocus="this.style.borderColor='var(--red)'"
+            onblur="this.style.borderColor='var(--border)'"
+          ></textarea>
+        </div>
+
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="gerarIntegracao()" id="btn-gerar">
+            ⚡ Gerar Integração
+          </button>
+          <button class="btn btn-outline" onclick="limparIntegracao()">Limpar</button>
+          <span id="int-status" style="font-size:0.82rem;color:var(--muted)"></span>
+        </div>
+      </div>
+
+      <!-- Resultado -->
+      <div id="int-resultado" style="display:none">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:1.25rem">✅ Arquivos gerados — clique para baixar</div>
+          <div id="int-files" style="display:flex;flex-direction:column;gap:0.75rem"></div>
+        </div>
+      </div>
+    </div><!-- /tab-integrar -->
+
+  </div><!-- /container -->
+</div><!-- /main-section -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  /* ── HELPERS ── */
+  function escHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  let _toastTimer = null;
+  function showToast(msg, type = 'info') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show toast-' + type;
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => { el.className = ''; }, 3200);
+  }
+
+  /* ── AUTH ── */
+  let adminPassword = '';
+
+  function doLogin() {
+    const pw = document.getElementById('password-input').value.trim();
+    if (!pw) return;
+    adminPassword = pw;
+
+    // GET /api/admin/users?password=... (como o server.js espera)
+    fetch('/api/admin/users?password=' + encodeURIComponent(adminPassword))
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) throw new Error(data.message);
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('main-section').style.display  = 'block';
+        renderUsers(data.users || []);
+      })
+      .catch(err => {
+        adminPassword = '';
+        const errEl = document.getElementById('login-error');
+        errEl.style.display = 'block';
+        errEl.textContent = err.message || 'Senha incorreta.';
+      });
+  }
+
+  document.getElementById('password-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  /* ── TABS ── */
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('onclick').includes("'" + name + "'"));
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if (name === 'logs') loadLogs();
+  }
+
+  /* ── LOAD USERS ── */
+  function loadUsers() {
+    fetch('/api/admin/users?password=' + encodeURIComponent(adminPassword))
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) throw new Error(data.message);
+        renderUsers(data.users || []);
+      })
+      .catch(err => showToast(err.message || 'Erro ao carregar usuários', 'err'));
+  }
+
+  function avatarUrl(u) {
+    if (u.discord_avatar_hash) {
+      const ext = u.discord_avatar_hash.startsWith('a_') ? 'gif' : 'png';
+      return `https://cdn.discordapp.com/avatars/${u.discord_id}/${u.discord_avatar_hash}.${ext}?size=64`;
+    }
+    return 'https://cdn.discordapp.com/embed/avatars/0.png';
+  }
+
+  function renderUsers(users) {
+    const tbody = document.getElementById('users-tbody');
+    if (!users || users.length === 0) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Nenhum usuário cadastrado.</td></tr>';
+      return;
+    }
+
+    const now = new Date();
+    tbody.innerHTML = users.map(u => {
+      const img = `<img class="avatar" src="${escHtml(avatarUrl(u))}" alt="" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'" />`;
+
+      const expDate   = u.expires_at ? new Date(u.expires_at) : null;
+      const expired   = expDate && expDate < now;
+      const expiryTxt = expDate
+        ? expDate.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' })
+        : 'Vitalício';
+      const expiryHtml = `<span style="color:${expired ? '#e57373' : 'var(--muted)'};font-size:0.82rem">${expiryTxt}${expired ? ' ⚠' : ''}</span>`;
+
+      const hwidHtml = u.hwid_locked
+        ? '<span style="color:#e57373;font-size:0.8rem;font-weight:600">🔒 Bloqueado</span>'
+        : u.hwid
+          ? `<span title="${escHtml(u.hwid)}" style="color:var(--muted);font-size:0.78rem">✓ Registrado</span>`
+          : '<span style="color:var(--muted)">—</span>';
+
+      const isActive = u.ativo && !expired && !u.hwid_locked;
+      const badge = isActive
+        ? '<span class="badge badge-active">Ativo</span>'
+        : expired
+          ? '<span class="badge badge-inactive">Expirado</span>'
+          : u.hwid_locked
+            ? '<span class="badge badge-inactive">Bloqueado</span>'
+            : '<span class="badge badge-inactive">Inativo</span>';
+
+      const safeId   = escHtml(u.discord_id);
+      const safeName = escHtml(u.discord_username);
+
+      return `
+        <tr>
+          <td>${img}</td>
+          <td style="font-weight:500">${safeName}</td>
+          <td><code style="font-size:0.78rem;color:var(--muted)">${safeId}</code></td>
+          <td>${expiryHtml}</td>
+          <td>${hwidHtml}</td>
+          <td>${badge}</td>
+          <td>
+            <div class="actions">
+              <button class="btn ${u.ativo ? 'btn-outline' : 'btn-primary'}" onclick="toggleUser('${safeId}',${!u.ativo})">
+                ${u.ativo ? 'Desativar' : 'Ativar'}
+              </button>
+              ${u.hwid ? `<button class="btn btn-outline" onclick="resetHwid('${safeId}','${safeName}')">Reset HWID</button>` : ''}
+              <button class="btn btn-danger" onclick="removeUser('${safeId}','${safeName}')">Remover</button>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  /* ── ADD USER ── */
+  function addUser() {
+    const discord_id = document.getElementById('new-discord').value.trim();
+    const username   = document.getElementById('new-username').value.trim();
+    const expires_at = document.getElementById('new-expires').value.trim();
+    const errEl      = document.getElementById('add-error');
+    errEl.style.display = 'none';
+
+    if (!discord_id) {
+      errEl.textContent = 'Discord ID é obrigatório.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    fetch('/api/admin/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password:         adminPassword,
+        discord_id,
+        discord_username: username || undefined,
+        expires_at:       expires_at || null
+      })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) throw new Error(data.message);
+      document.getElementById('new-discord').value  = '';
+      document.getElementById('new-username').value = '';
+      document.getElementById('new-expires').value  = '';
+      showToast(data.message, 'ok');
+      loadUsers();
+    })
+    .catch(err => {
+      errEl.textContent = err.message || 'Erro ao adicionar usuário.';
+      errEl.style.display = 'block';
+    });
+  }
+
+  /* ── TOGGLE USER ── */
+  function toggleUser(discord_id, ativo) {
+    fetch('/api/admin/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: adminPassword, discord_id, ativo })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) throw new Error(data.message);
+      showToast(data.message, 'ok');
+      loadUsers();
+    })
+    .catch(err => showToast(err.message || 'Erro ao alterar status', 'err'));
+  }
+
+  /* ── RESET HWID ── */
+  function resetHwid(discord_id, name) {
+    if (!confirm(`Resetar HWID de ${name}?`)) return;
+    fetch('/api/admin/reset-hwid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: adminPassword, discord_id })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) throw new Error(data.message);
+      showToast(data.message, 'ok');
+      loadUsers();
+    })
+    .catch(err => showToast(err.message || 'Erro ao resetar HWID', 'err'));
+  }
+
+  /* ── REMOVE USER ── */
+  function removeUser(discord_id, name) {
+    if (!confirm(`Remover ${name}? Esta ação não pode ser desfeita.`)) return;
+    fetch('/api/admin/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: adminPassword, discord_id })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) throw new Error(data.message);
+      showToast(data.message, 'ok');
+      loadUsers();
+    })
+    .catch(err => showToast(err.message || 'Erro ao remover usuário', 'err'));
+  }
+
+  /* ── LOAD LOGS ── */
+  function loadLogs() {
+    const tbody = document.getElementById('logs-tbody');
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Carregando logs…</td></tr>';
+
+    fetch('/api/admin/logs?password=' + encodeURIComponent(adminPassword) + '&limit=100')
+      .then(r => r.json())
+      .then(data => {
+        if (!data.success) throw new Error(data.message);
+        renderLogs(data.logs || []);
+      })
+      .catch(() => {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Erro ao carregar logs.</td></tr>';
+      });
+  }
+
+  function renderLogs(logs) {
+    const tbody = document.getElementById('logs-tbody');
+    if (!logs || logs.length === 0) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Nenhum log disponível.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = logs.map(l => {
+      const icon = l.success
+        ? '<span class="log-success" title="Sucesso">✓</span>'
+        : '<span class="log-fail"    title="Falha">✗</span>';
+
+      const date = l.created_at
+        ? new Date(l.created_at).toLocaleString('pt-BR', {
+            day:'2-digit', month:'2-digit', year:'numeric',
+            hour:'2-digit', minute:'2-digit', second:'2-digit'
+          })
+        : '—';
+
+      return `
+        <tr>
+          <td style="font-size:0.82rem;color:var(--muted)">${escHtml(l.discord_id)}</td>
+          <td style="text-align:center">${icon}</td>
+          <td><div class="log-msg" title="${escHtml(l.message)}">${escHtml(l.message)}</div></td>
+          <td style="font-size:0.82rem;color:var(--muted)">${escHtml(l.ip_address)}</td>
+          <td style="font-size:0.78rem;color:var(--muted);white-space:nowrap">${date}</td>
+        </tr>`;
+    }).join('');
+  }
+  /* ── INTEGRAÇÃO ── */
+  document.getElementById('int-lang').addEventListener('change', function() {
+    const labels = { csharp: 'Cole o conteúdo do Form1.cs aqui', cpp: 'Cole o conteúdo do main.cpp aqui' };
+    const placeholders = {
+      csharp: 'Cole aqui o conteúdo completo do Form1.cs...',
+      cpp:    'Cole aqui o conteúdo completo do main.cpp...'
+    };
+    document.getElementById('int-file-label').textContent = labels[this.value];
+    document.getElementById('int-code').placeholder = placeholders[this.value];
+    document.getElementById('int-resultado').style.display = 'none';
+    document.getElementById('int-status').textContent = '';
+  });
+
+  async function gerarIntegracao() {
+    const lang    = document.getElementById('int-lang').value;
+    const code    = document.getElementById('int-code').value.trim();
+    const api_url = document.getElementById('int-url').value.trim();
+    const status  = document.getElementById('int-status');
+    const btn     = document.getElementById('btn-gerar');
+
+    if (!code) {
+      status.style.color = '#e57373';
+      status.textContent = 'Cole o código do arquivo primeiro.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Gerando...';
+    status.style.color = 'var(--muted)';
+    status.textContent = 'Processando...';
+    document.getElementById('int-resultado').style.display = 'none';
+
+    try {
+      const res  = await fetch('/api/integrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword, lang, code, api_url })
+      });
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.message);
+
+      // Renderiza botões de download
+      const container = document.getElementById('int-files');
+      container.innerHTML = '';
+
+      const descriptions = {
+        'Form1.cs':   'Seu Form1.cs com a integração Nz Store injetada',
+        'NzStore.cs': 'Biblioteca de autenticação — adicione ao projeto',
+        'main.cpp':   'Seu main.cpp com a integração Nz Store injetada',
+        'nzstore.cpp':'Implementação da autenticação — adicione ao projeto',
+        'nzstore.h':  'Header da autenticação — adicione ao projeto'
+      };
+
+      data.files.forEach(f => {
+        const blob = new Blob([f.content], { type: 'text/plain;charset=utf-8' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = f.name;
+        a.className = 'file-download-btn';
+        a.innerHTML = `
+          <div>
+            <div class="fname">${escHtml(f.name)}</div>
+            <div class="fmeta">${escHtml(descriptions[f.name] || '')}</div>
+          </div>
+          <span class="dl-icon">⬇</span>
+        `;
+        container.appendChild(a);
+      });
+
+      document.getElementById('int-resultado').style.display = 'block';
+      status.style.color = '#4caf50';
+      status.textContent = `${data.files.length} arquivo(s) gerado(s) com sucesso.`;
+      showToast('Integração gerada! Baixe os arquivos.', 'ok');
+
+    } catch (err) {
+      status.style.color = '#e57373';
+      status.textContent = err.message || 'Erro ao gerar integração.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '⚡ Gerar Integração';
+    }
+  }
+
+  function limparIntegracao() {
+    document.getElementById('int-code').value = '';
+    document.getElementById('int-url').value  = '';
+    document.getElementById('int-status').textContent = '';
+    document.getElementById('int-resultado').style.display = 'none';
+  }
+</script>
+</body>
+</html>
